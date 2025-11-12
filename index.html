@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বাংলাদেশ জাতীয় নির্বাচন ফলাফল</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #006a4e;
+            --secondary: #f42a41;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        header {
+            background: linear-gradient(to right, var(--primary), #138d65);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .main-content {
+            padding: 30px 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .stat-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .party-progress {
+            margin-bottom: 30px;
+        }
+
+        .party-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .party-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .party-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .party-seats {
+            font-weight: 600;
+            margin-right: 15px;
+        }
+
+        .party-percentage {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            height: 300px;
+        }
+
+        .prediction-meter {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .meter-container {
+            height: 40px;
+            background: #e9ecef;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .meter-fill {
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+
+        .meter-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .admin-login {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #00563f;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .admin-panel {
+            display: none;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .party-inputs {
+            margin-bottom: 30px;
+        }
+
+        .party-input-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .add-party-btn {
+            margin-top: 10px;
+        }
+
+        .update-status {
+            padding: 10px;
+            background: #d4edda;
+            color: #155724;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p {
+            margin-bottom: 10px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #495057;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-links {
+                margin-top: 15px;
+                justify-content: center;
+            }
+
+            .nav-links li {
+                margin: 0 10px;
+            }
+
+            .party-input-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-vote-yea"></i>
+                    <h1>বাংলাদেশ নির্বাচন ফলাফল</h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" id="public-view-link">পাবলিক ভিউ</a></li>
+                    <li><a href="#" id="admin-login-link">অ্যাডমিন লগইন</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container main-content">
+        <!-- Public View -->
+        <div id="public-view">
+            <!-- Statistics Cards -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <i class="fas fa-poll"></i>
+                    <h3>মোট ভোটকেন্দ্র</h3>
+                    <div class="number" id="total-centers">300</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>প্রকাশিত ফলাফল</h3>
+                    <div class="number" id="published-centers">150</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>বাকি কেন্দ্র</h3>
+                    <div class="number" id="remaining-centers">150</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-percentage"></i>
+                    <h3>প্রকাশিত ফলাফলের হার</h3>
+                    <div class="number" id="published-percentage">50%</div>
+                </div>
+            </div>
+
+            <!-- Party Progress -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">দলভিত্তিক আসন সংখ্যা</h2>
+                </div>
+                <div class="party-progress" id="party-progress">
+                    <!-- Party items will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-container">
+                <div class="chart-card">
+                    <canvas id="seatsChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <canvas id="votePercentageChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Prediction Meter -->
+            <div class="prediction-meter card">
+                <div class="card-header">
+                    <h2 class="card-title">সরকার গঠনের সম্ভাবনা</h2>
+                </div>
+                <p>বর্তমান ফলাফলের ভিত্তিতে সরকার গঠনের সম্ভাবনা</p>
+                <div class="meter-container">
+                    <div class="meter-fill" id="prediction-fill" style="width: 60%; background-color: #006a4e;"></div>
+                </div>
+                <div class="meter-labels">
+                    <span>অসম্ভব</span>
+                    <span id="prediction-text">সম্ভাব্য</span>
+                    <span>নিশ্চিত</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Login -->
+        <div id="admin-login" class="admin-login" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 20px; color: var(--primary);">অ্যাডমিন লগইন</h2>
+            <div class="form-group">
+                <label for="username">ব্যবহারকারীর নাম</label>
+                <input type="text" id="username" class="form-control" placeholder="ব্যবহারকারীর নাম লিখুন">
+            </div>
+            <div class="form-group">
+                <label for="password">পাসওয়ার্ড</label>
+                <input type="password" id="password" class="form-control" placeholder="পাসওয়ার্ড লিখুন">
+            </div>
+            <button class="btn btn-block" id="login-btn">লগইন</button>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="admin-panel" class="admin-panel">
+            <div class="admin-header">
+                <h2 style="color: var(--primary);">অ্যাডমিন ড্যাশবোর্ড</h2>
+                <button class="btn" id="logout-btn">লগআউট</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">মূল সেটিংস</h2>
+                </div>
+                <div class="input-grid">
+                    <div class="form-group">
+                        <label for="total-centers-input">মোট ভোটকেন্দ্র সংখ্যা</label>
+                        <input type="number" id="total-centers-input" class="form-control" value="300">
+                    </div>
+                    <div class="form-group">
+                        <label for="published-centers-input">প্রকাশিত কেন্দ্র সংখ্যা</label>
+                        <input type="number" id="published-centers-input" class="form-control" value="150">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card party-inputs">
+                <div class="card-header">
+                    <h2 class="card-title">দলভিত্তিক আসন সংখ্যা</h2>
+                </div>
+                <div id="party-inputs-container">
+                    <!-- Party inputs will be dynamically added here -->
+                </div>
+                <button class="btn add-party-btn" id="add-party-btn">নতুন দল যোগ করুন</button>
+            </div>
+
+            <button class="btn btn-block" id="update-data-btn">ডেটা আপডেট করুন</button>
+            <div class="update-status" id="update-status">ডেটা সফলভাবে আপডেট করা হয়েছে!</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>বাংলাদেশ নির্বাচন ফলাফল</h3>
+                    <p>জাতীয় নির্বাচনের রিয়েল-টাইম ফলাফল ও বিশ্লেষণ</p>
+                </div>
+                <div class="footer-section">
+                    <h3>যোগাযোগ</h3>
+                    <p>ইমেইল: info@electionbd.com</p>
+                    <p>ফোন: +৮৮০ ১৬XX-XXXXXX</p>
+                </div>
+                <div class="footer-section">
+                    <h3>গুরুত্বপূর্ণ লিংক</h3>
+                    <p><a href="#" style="color: white;">নির্বাচন কমিশন</a></p>
+                    <p><a href="#" style="color: white;">সরকারি ওয়েবসাইট</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; ২০২৩ বাংলাদেশ নির্বাচন ফলাফল। সকল স্বত্ব সংরক্ষিত।</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initial data
+        let electionData = {
+            totalCenters: 300,
+            publishedCenters: 150,
+            parties: [
+                { name: "আওয়ামী লীগ", seats: 85, color: "#006a4e" },
+                { name: "বিএনপি", seats: 45, color: "#0047AB" },
+                { name: "জাতীয় পার্টি", seats: 15, color: "#FF0000" },
+                { name: "জাসদ", seats: 5, color: "#FFD700" }
+            ]
+        };
+
+        // DOM Elements
+        const publicView = document.getElementById('public-view');
+        const adminLogin = document.getElementById('admin-login');
+        const adminPanel = document.getElementById('admin-panel');
+        const publicViewLink = document.getElementById('public-view-link');
+        const adminLoginLink = document.getElementById('admin-login-link');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const updateDataBtn = document.getElementById('update-data-btn');
+        const addPartyBtn = document.getElementById('add-party-btn');
+        const updateStatus = document.getElementById('update-status');
+
+        // Charts
+        let seatsChart, votePercentageChart;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function () {
+            updatePublicView();
+            renderPartyInputs();
+            initializeCharts();
+
+            // Event Listeners
+            publicViewLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                showPublicView();
+            });
+
+            adminLoginLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                showAdminLogin();
+            });
+
+            loginBtn.addEventListener('click', function () {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                // Simple authentication (in a real app, this would be more secure)
+                if (username === 'admin' && password === 'admin123') {
+                    showAdminPanel();
+                } else {
+                    alert('ভুল ব্যবহারকারীর নাম বা পাসওয়ার্ড!');
+                }
+            });
+
+            logoutBtn.addEventListener('click', function () {
+                showPublicView();
+            });
+
+            updateDataBtn.addEventListener('click', function () {
+                updateElectionData();
+                updatePublicView();
+                updateCharts();
+
+                // Show update status
+                updateStatus.style.display = 'block';
+                setTimeout(function () {
+                    updateStatus.style.display = 'none';
+                }, 3000);
+            });
+
+            addPartyBtn.addEventListener('click', function () {
+                addNewPartyInput();
+            });
+        });
+
+        // Show public view
+        function showPublicView() {
+            publicView.style.display = 'block';
+            adminLogin.style.display = 'none';
+            adminPanel.style.display = 'none';
+        }
+
+        // Show admin login
+        function showAdminLogin() {
+            publicView.style.display = 'none';
+            adminLogin.style.display = 'block';
+            adminPanel.style.display = 'none';
+        }
+
+        // Show admin panel
+        function showAdminPanel() {
+            publicView.style.display = 'none';
+            adminLogin.style.display = 'none';
+            adminPanel.style.display = 'block';
+        }
+
+        // Update public view with current data
+        function updatePublicView() {
+            // Update center statistics
+            document.getElementById('total-centers').textContent = electionData.totalCenters;
+            document.getElementById('published-centers').textContent = electionData.publishedCenters;
+            document.getElementById('remaining-centers').textContent = electionData.totalCenters - electionData.publishedCenters;
+            document.getElementById('published-percentage').textContent =
+                Math.round((electionData.publishedCenters / electionData.totalCenters) * 100) + '%';
+
+            // Update party progress
+            const partyProgress = document.getElementById('party-progress');
+            partyProgress.innerHTML = '';
+
+            let totalSeats = electionData.parties.reduce((sum, party) => sum + party.seats, 0);
+
+            electionData.parties.forEach(party => {
+                const percentage = totalSeats > 0 ? Math.round((party.seats / totalSeats) * 100) : 0;
+
+                const partyItem = document.createElement('div');
+                partyItem.className = 'party-item';
+                partyItem.innerHTML = `
+                    <div class="party-color" style="background-color: ${party.color};"></div>
+                    <div class="party-name">${party.name}</div>
+                    <div class="party-seats">${party.seats} আসন</div>
+                    <div class="party-percentage">${percentage}%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${percentage}%; background-color: ${party.color};"></div>
+                    </div>
+                `;
+
+                partyProgress.appendChild(partyItem);
+            });
+
+            // Update prediction meter
+            updatePredictionMeter();
+        }
+
+        // Update prediction meter based on current data
+        function updatePredictionMeter() {
+            const leadingParty = electionData.parties.reduce((leading, party) =>
+                party.seats > leading.seats ? party : leading, { seats: 0 });
+
+            const totalSeats = electionData.parties.reduce((sum, party) => sum + party.seats, 0);
+            const percentage = totalSeats > 0 ? Math.round((leadingParty.seats / totalSeats) * 100) : 0;
+
+            const predictionFill = document.getElementById('prediction-fill');
+            const predictionText = document.getElementById('prediction-text');
+
+            predictionFill.style.width = percentage + '%';
+            predictionFill.style.backgroundColor = leadingParty.color || '#006a4e';
+
+            if (percentage >= 60) {
+                predictionText.textContent = 'উচ্চ সম্ভাবনা';
+            } else if (percentage >= 40) {
+                predictionText.textContent = 'সম্ভাব্য';
+            } else {
+                predictionText.textContent = 'কম সম্ভাবনা';
+            }
+        }
+
+        // Render party inputs in admin panel
+        function renderPartyInputs() {
+            const container = document.getElementById('party-inputs-container');
+            container.innerHTML = '';
+
+            electionData.parties.forEach((party, index) => {
+                const partyRow = document.createElement('div');
+                partyRow.className = 'party-input-row';
+                partyRow.innerHTML = `
+                    <input type="text" class="form-control party-name" value="${party.name}" placeholder="দলের নাম">
+                    <input type="number" class="form-control party-seats" value="${party.seats}" placeholder="আসন সংখ্যা">
+                    <input type="color" class="form-control party-color" value="${party.color}">
+                    <button class="btn" style="background-color: var(--danger);" onclick="removeParty(${index})">মুছুন</button>
+                `;
+
+                container.appendChild(partyRow);
+            });
+        }
+
+        // Add new party input
+        function addNewPartyInput() {
+            const container = document.getElementById('party-inputs-container');
+
+            const partyRow = document.createElement('div');
+            partyRow.className = 'party-input-row';
+            partyRow.innerHTML = `
+                <input type="text" class="form-control party-name" placeholder="দলের নাম">
+                <input type="number" class="form-control party-seats" placeholder="আসন সংখ্যা">
+                <input type="color" class="form-control party-color" value="#000000">
+                <button class="btn" style="background-color: var(--danger);" onclick="this.parentElement.remove()">মুছুন</button>
+            `;
+
+            container.appendChild(partyRow);
+        }
+
+        // Remove party
+        function removeParty(index) {
+            electionData.parties.splice(index, 1);
+            renderPartyInputs();
+        }
+
+        // Update election data from admin inputs
+        function updateElectionData() {
+            // Update center data
+            electionData.totalCenters = parseInt(document.getElementById('total-centers-input').value) || 0;
+            electionData.publishedCenters = parseInt(document.getElementById('published-centers-input').value) || 0;
+
+            // Update party data
+            const partyNames = document.querySelectorAll('.party-name');
+            const partySeats = document.querySelectorAll('.party-seats');
+            const partyColors = document.querySelectorAll('.party-color');
+
+            electionData.parties = [];
+
+            for (let i = 0; i < partyNames.length; i++) {
+                const name = partyNames[i].value.trim();
+                const seats = parseInt(partySeats[i].value) || 0;
+                const color = partyColors[i].value;
+
+                if (name && seats >= 0) {
+                    electionData.parties.push({ name, seats, color });
+                }
+            }
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            const seatsCtx = document.getElementById('seatsChart').getContext('2d');
+            const voteCtx = document.getElementById('votePercentageChart').getContext('2d');
+
+            const partyNames = electionData.parties.map(party => party.name);
+            const partySeats = electionData.parties.map(party => party.seats);
+            const partyColors = electionData.parties.map(party => party.color);
+
+            // Seats Chart
+            seatsChart = new Chart(seatsCtx, {
+                type: 'bar',
+                data: {
+                    labels: partyNames,
+                    datasets: [{
+                        label: 'আসন সংখ্যা',
+                        data: partySeats,
+                        backgroundColor: partyColors,
+                        borderColor: partyColors.map(color => color.replace('0.2', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'দলভিত্তিক আসন সংখ্যা'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'আসন সংখ্যা'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Vote Percentage Chart
+            const totalSeats = partySeats.reduce((a, b) => a + b, 0);
+            const percentages = partySeats.map(seats =>
+                totalSeats > 0 ? Math.round((seats / totalSeats) * 100) : 0
+            );
+
+            votePercentageChart = new Chart(voteCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: partyNames,
+                    datasets: [{
+                        data: percentages,
+                        backgroundColor: partyColors,
+                        borderColor: partyColors.map(color => color.replace('0.2', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: 'দলভিত্তিক ভোট শতাংশ'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update charts with current data
+        function updateCharts() {
+            const partyNames = electionData.parties.map(party => party.name);
+            const partySeats = electionData.parties.map(party => party.seats);
+            const partyColors = electionData.parties.map(party => party.color);
+
+            // Update seats chart
+            seatsChart.data.labels = partyNames;
+            seatsChart.data.datasets[0].data = partySeats;
+            seatsChart.data.datasets[0].backgroundColor = partyColors;
+            seatsChart.data.datasets[0].borderColor = partyColors;
+            seatsChart.update();
+
+            // Update vote percentage chart
+            const totalSeats = partySeats.reduce((a, b) => a + b, 0);
+            const percentages = partySeats.map(seats =>
+                totalSeats > 0 ? Math.round((seats / totalSeats) * 100) : 0
+            );
+
+            votePercentageChart.data.labels = partyNames;
+            votePercentageChart.data.datasets[0].data = percentages;
+            votePercentageChart.data.datasets[0].backgroundColor = partyColors;
+            votePercentageChart.data.datasets[0].borderColor = partyColors;
+            votePercentageChart.update();
+        }
+    </script>
+</body>
+
+</html>
